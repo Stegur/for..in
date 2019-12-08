@@ -1,16 +1,32 @@
 export default function orderByProps(obj, sortProps) {
-  const array = [];
+  const data = { ...obj };
+  const pirimaryArray = [];
+  const arrayToSort = [];
 
-  for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      array.push({
+  for (const prop of sortProps) {
+    for (const key in data) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        if (prop === key) {
+          pirimaryArray.push({
+            key,
+            value: data[key],
+          });
+          delete data[key];
+        }
+      }
+    }
+  }
+
+  for (const key in data) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      arrayToSort.push({
         key,
-        value: obj[key],
+        value: data[key],
       });
     }
   }
 
-  array.sort((a, b) => (b.key < a.key) - (a.key < b.key));
+  arrayToSort.sort((a, b) => (b.key < a.key) - (a.key < b.key));
 
-  return array;
+  return [...pirimaryArray, ...arrayToSort];
 }
